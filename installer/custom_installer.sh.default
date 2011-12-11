@@ -11,10 +11,6 @@ VM="/aPath/to/vm"
 # test image 	=>  ConfigurationOfOrca
 # (only Orca packages and their dependencies)
 
-# dev image 	=>	ConfigurationOfBP2010H1
-# (Orca packages with dependencies, Preferences, OmniBrowser, Refactoring for OB, 
-# OCompletion, OCforOB, Shout)
-
 CONFIG="ConfigurationOfOrca" 
 
 # Add the parameterlesss '-a' switch to also create an archive of the installed files
