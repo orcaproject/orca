@@ -1,18 +1,27 @@
 #!/bin/bash
 
-# Put your own values here
-# The credentials are for your Monticello-account
-USER="aUser"
-PW="aPw"
-VM="/aPath/to/vm"
+# Copy to custom_installer.sh and set your values
 
-# Choose which Configuration you want to load into the new image
 
-# test image 	=>  ConfigurationOfOrca
-# (only Orca packages and their dependencies)
+### Basic configuration
 
+# Path to your Squeak VM 
+VM="/path/to/vm"
+
+
+### Advanced configuration
+
+# Git repository
+GIT="http://github.com/orcaproject/orca.git"
+
+# Monticello repository
+MONTICELLO="http://www.hpi.uni-potsdam.de/hirschfeld/squeaksource/Orca"
+# Credentials, if you have commit access to the Monticello repository – otherwise leave empty
+USER=""
+PW=""
+
+# For Orca packages and dependencies use "ConfigurationOfOrca"
 CONFIG="ConfigurationOfOrca" 
 
-# Add the parameterlesss '-a' switch to also create an archive of the installed files
-
-`dirname $0`/installer.sh -u "$USER" -p "$PW" -v "$VM" -c "$CONFIG"
+# Add the parameterlesss '-a' switch to create an archive of the installed files
+`dirname $0`/installer.sh -m "$MONTICELLO" -g "$GIT" -u "$USER" -p "$PW" -v "$VM" -c "$CONFIG"

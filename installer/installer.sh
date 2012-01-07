@@ -27,7 +27,7 @@ function download {
       echo "Downloading current trunk image"
       TRUNK="ftp://ftp.squeak.org/trunk/"
       SOURCES="ftp://ftp.squeak.org/sources_files/"
-      SQUEAK_IMAGE_FILES=$(curl ${TRUNK} | grep "Squeak.*zip" | tail -1 | awk '{print $NF}')
+      SQUEAK_IMAGE_FILES=$(curl ${TRUNK} | grep "Squeak[0-9]\.[0-9].*zip" | tail -1 | awk '{print $NF}')
       SQUEAK_SOURCES_FILE=$(curl ${SOURCES} | grep "sources.gz" | tail -1 | awk '{print $NF}')
       curl -O "${SOURCES}${SQUEAK_SOURCES_FILE}"
       curl -O "${TRUNK}${SQUEAK_IMAGE_FILES}"
@@ -49,7 +49,7 @@ function setup {
 	(Smalltalk at: #ConfigurationOfMetacello) load.
 
 	((Installer monticello) 
-		http: 'http://www.hpi.uni-potsdam.de/hirschfeld/squeaksource/Orca'
+		http: '${MONTICELLO}'
 		user: '${USERNAME}'
 		password: '${PASSWORD}')	
 		installQuietly: '${CONFIG}'.
@@ -67,7 +67,7 @@ EOF
 
 function usage {
 	E_OPTERROR=65
-	echo "Usage: `basename $0` -u <USERNAME> -p <PASSWORD> -v <BUILD_VM_PATH> -c <METACELLO_CONFIGURATION>" [-a]
+	echo "Usage: `basename $0` -m <MONTICELLO_REPOSITORY> -g <GIT_REPOSITORY> -u <USERNAME> -p <PASSWORD> -v <BUILD_VM_PATH> -c <METACELLO_CONFIGURATION> [-a]"
 	exit $E_OPTERROR	
 }
 
@@ -76,9 +76,11 @@ then
 	usage
 fi
 
-while getopts ":u:p:v:c:a:" OPTION
+while getopts ":m:g:u:p:v:c:a:" OPTION
 do
 	case $OPTION in
+		m) MONTICELLO="$OPTARG" ;;
+		g) GIT="$OPTARG" ;;
 		u) USERNAME="$OPTARG" ;;
 		p) PASSWORD="$OPTARG" ;;
 		v) VM_PATH="$OPTARG" ;;
@@ -100,15 +102,11 @@ DATE_STRING=`date +%Y%m%d_%H%M%S`
 mkdir "orca_${DATE_STRING}"
 cd "orca_${DATE_STRING}"
 
-
 eval "mv $(ls ../*.image | head -1)" "Squeak.image"
 eval "mv $(ls ../*.changes | head -1)" "Squeak.changes"
 mv ../SqueakV41.sources ./
 
-git clone http://github.com/orcaproject/orca.git
-cat <<EOF> INSTALL
-Move this content into your Resources directory.
-EOF
+git clone "$GIT"
 
 mv "${TEMP}/orca_${DATE_STRING}" $OLDDIR/
 
