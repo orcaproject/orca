@@ -41,12 +41,11 @@
 			}
 			return st.nil;
 		},
-		whileTrue: function(anotherBlock) {
-			while (this.value() === st.true)
-				anotherBlock.value();
+		whileTrue: function() {
+			while (this.value() === st.true) ;
 			return st.nil;
 		},
-		whileFalse_: function() {
+		whileFalse_: function(anotherBlock) {
 			while (this.value() === st.false) {
 				anotherBlock.value();
 			}
